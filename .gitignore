@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+.venv/
+venv/
+artifacts/
+checkpoints/
+exp_results/
+test_results/
+result_long_term_forecast.txt
+*.log
+*.pth
+*.pt
+*.ckpt
+runs/
