@@ -11,10 +11,8 @@ revised manuscript.
 - `experiments/stage1/pdt/*.json`: parameter manifests for the reported PDT runs.
 - `scripts/local/run_manifest.py`: local manifest entrypoint.
 - `scripts/remote/run_manifest.sh`: remote-friendly manifest wrapper.
-- `scripts/sweeps/`: dataset-level sweep scripts for the generated `k_top`
-  tuning manifests.
 - `scripts/measure_pdt_weather_resources.py`: thop-based resource measurement
-  for PDT on Weather with `L=96,T=192`.
+  for PDT.
 - `baselines/PDT/dataset/RRR_mats/`: PDT initialization matrices referenced by
   the manifests.
 - `baselines/PDT/dataset/ETT-small/ETTh1.csv`: small public dataset file used
@@ -70,23 +68,6 @@ python scripts/local/run_manifest.py \
   --output-root artifacts/runs
 ```
 
-## K-Top Sweeps
-
-The `k_top` tuning manifests are stored under
-`experiments/stage1/pdt/k_top_sweep/`. Each file contains one setting. To run
-them by dataset, use:
-
-```bash
-scripts/sweeps/run_etth1_k_top_sweep.sh --gpu 0
-scripts/sweeps/run_etth2_k_top_sweep.sh --gpu 0
-scripts/sweeps/run_ettm1_k_top_sweep.sh --gpu 0
-```
-
-Use `--dry-run` to print the resolved commands without training:
-
-```bash
-scripts/sweeps/run_etth1_k_top_sweep.sh --gpu 1 --dry-run
-```
 
 ## MACs And Memory Profiling
 
