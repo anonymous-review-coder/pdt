@@ -18,7 +18,6 @@ except ImportError as exc:
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 BASELINE_ROOT = REPO_ROOT / "baselines" / "PDT"
-DEFAULT_MANIFEST = REPO_ROOT / "experiments" / "stage1" / "pdt" / "weather_multi_pred_len.json"
 FIXED_PRED_LEN = 192
 MODEL_NAME = "PDT"
 
@@ -28,58 +27,79 @@ if str(BASELINE_ROOT) not in sys.path:
     sys.path.insert(0, str(BASELINE_ROOT))
 
 from models import PDT
-from protocol.manifests import load_manifest
 
 
-DEFAULT_ARGS: dict[str, Any] = {
+OLD_R2LINEAR_WEATHER_ARGS: dict[str, Any] = {
     "activation": "gelu",
     "CKA_flag": 0,
+    "channel_independence": 0,
+    "class_strategy": "projection",
+    "c_out": 21,
+    "data": "custom",
+    "data_path": "weather.csv",
+    "d_ff": 2048,
+    "d_layers": 1,
+    "dec_in": 21,
+    "decomposition": 0,
+    "d_model": 512,
     "distil": True,
     "embed": "timeF",
-    "factor": 3,
+    "embed_size": 16,
+    "enc_in": 21,
+    "e_layers": 2,
+    "factor": 1,
+    "features": "M",
+    "fc_dropout": 0.05,
+    "freq": "h",
     "freeze_R": 0,
+    "head_dropout": 0.0,
+    "individual": False,
+    "is_training": 0,
+    "kernel_size": 25,
+    "k_top": 16,
     "label_len": 48,
-    "mask_sharpness_k": 100.0,
+    "mask_sharpness_k": 2,
+    "mask_threshold": 0.1,
+    "model": MODEL_NAME,
+    "model_id": "test",
+    "moving_avg": 25,
+    "n_heads": 8,
+    "num_kernels": 6,
     "output_attention": False,
+    "padding_patch": "end",
+    "patch_len": 16,
+    "pred_len": FIXED_PRED_LEN,
     "Q_chan_indep": 0,
+    "revin": 1,
+    "r_rank": 96,
+    "seg_len": 48,
+    "seq_len": 96,
+    "stride": 8,
+    "subtract_last": 0,
+    "target": "OT",
+    "task_name": "long_term_forecast",
     "temp_patch_len": 16,
     "temp_stride": 8,
+    # "top_k": 5,
+    "use_norm": 1,
+    "win_size": 1,
+    "affine": 0,
+    "alpha_init": 0.4,
+    "cross_activation": "tanh",
+    "dropout": 0.0,
 }
 
 
-def _select_pred_len_args(manifest_path: Path, pred_len: int) -> dict[str, Any]:
-    manifest = load_manifest(manifest_path)
-    if manifest.dataset != "Weather":
-        raise ValueError(f"This resource script only supports Weather, got {manifest.dataset}.")
-    if manifest.seq_len != 96:
-        raise ValueError(f"This resource script only supports seq_len=96, got {manifest.seq_len}.")
-    if pred_len not in manifest.pred_lens:
-        raise ValueError(f"pred_len={pred_len} is not listed in {manifest_path}.")
-
-    args = dict(manifest.raw["args"])
-    index = manifest.pred_lens.index(pred_len)
-    for key, value in list(args.items()):
-        if isinstance(value, list):
-            args[key] = value[index]
-    args["pred_len"] = pred_len
-    args["model"] = MODEL_NAME
-    return args
-
-
-def _resolve_baseline_path(value: Any) -> Any:
-    if not isinstance(value, str) or not value:
-        return value
-    path = Path(value)
-    if path.is_absolute():
-        return value
-    return str((BASELINE_ROOT / path).resolve())
-
-
-def build_config(manifest_path: Path) -> Namespace:
-    args = DEFAULT_ARGS | _select_pred_len_args(manifest_path, FIXED_PRED_LEN)
+def build_config() -> Namespace:
+    args = dict(OLD_R2LINEAR_WEATHER_ARGS)
     args["root_path"] = str((BASELINE_ROOT / "dataset" / "weather").resolve())
-    for field in ("q_mat_file", "Q_MAT_file", "r_mat_file", "R_MAT_file", "rk_mat_file", "Rk_MAT_file"):
-        args[field] = _resolve_baseline_path(args.get(field))
+    rrr_root = BASELINE_ROOT / "dataset" / "RRR_mats" / "weather"
+    args["q_mat_file"] = str((rrr_root / "weather_RRR_L96_R96_H192_Qin.npy").resolve())
+    args["Q_MAT_file"] = args["q_mat_file"]
+    args["r_mat_file"] = str((rrr_root / "weather_RRR_L96_R96_H192_R.npy").resolve())
+    args["R_MAT_file"] = args["r_mat_file"]
+    args["rk_mat_file"] = str((rrr_root / "weather_RRR_L96_R16_H192_R.npy").resolve())
+    args["Rk_MAT_file"] = args["rk_mat_file"]
     return Namespace(**args)
 
 
@@ -166,7 +186,6 @@ def measure_training_memory(config: Namespace, device: torch.device, batch_size:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Measure PDT resources for Weather L=96, T=192.")
-    parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST, help="Weather PDT manifest path.")
     parser.add_argument("--device", choices=["cpu", "cuda"], default="cuda" if torch.cuda.is_available() else "cpu")
     parser.add_argument("--train-batch-size", type=int, default=32, help="Batch size for training-memory measurement.")
     parser.add_argument("--output", type=Path, help="Optional JSON output path.")
@@ -175,7 +194,7 @@ def main() -> int:
     if args.device == "cuda" and not torch.cuda.is_available():
         raise RuntimeError("CUDA requested but not available.")
 
-    config = build_config(args.manifest.resolve())
+    config = build_config()
     device = torch.device(args.device)
     model = PDT.Model(config).to(device)
 
@@ -185,7 +204,10 @@ def main() -> int:
         "seq_len": config.seq_len,
         "pred_len": FIXED_PRED_LEN,
         "device": str(device),
-        "manifest": str(args.manifest.resolve()),
+        "config_source": "old/measure_resources_baselines.py R2Linear weather pl=192 with model=PDT",
+        "d_ff": config.d_ff,
+        "k_top": config.k_top,
+        "mask_sharpness_k": config.mask_sharpness_k,
     }
     result.update(measure_inference(model, config, device))
     result.update(measure_training_memory(config, device, args.train_batch_size))

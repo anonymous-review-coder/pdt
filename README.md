@@ -83,8 +83,7 @@ On a CUDA machine, run:
 python scripts/measure_pdt_weather_resources.py --device cuda
 ```
 
-The script reports MACs, parameter count, inference memory, and training memory
-for PDT only.
+The script reports MACs, parameter count, inference memory, and training memory for PDT. 
 
 ```bash
 python scripts/profile_macs_memory.py \
@@ -97,4 +96,3 @@ python scripts/profile_macs_memory.py \
 When CUDA is available, use `--device cuda` to report peak CUDA memory. MACs are
 estimated with forward hooks over the Linear and Conv1d modules used by the PDT
 forecasting path.
-
