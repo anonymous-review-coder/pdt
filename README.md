@@ -11,7 +11,6 @@ revised manuscript.
 - `experiments/stage1/pdt/*.json`: parameter manifests for the reported PDT runs.
 - `scripts/local/run_manifest.py`: local manifest entrypoint.
 - `scripts/remote/run_manifest.sh`: remote-friendly manifest wrapper.
-- `scripts/profile_macs_memory.py`: MACs and memory profiling utility.
 - `scripts/measure_pdt_weather_resources.py`: thop-based resource measurement
   for PDT on Weather with `L=96,T=192`.
 - `baselines/PDT/dataset/RRR_mats/`: PDT initialization matrices referenced by
@@ -99,16 +98,3 @@ When CUDA is available, use `--device cuda` to report peak CUDA memory. MACs are
 estimated with forward hooks over the Linear and Conv1d modules used by the PDT
 forecasting path.
 
-## Parameter Settings
-
-The reviewer-facing parameter settings are stored in
-`experiments/stage1/pdt/*.json`. Each manifest specifies the dataset, prediction
-horizon, optimizer settings, PDT matrix files, Top-K setting, mask threshold,
-and runner entrypoint.
-
-## Notes On Anonymization
-
-This package intentionally excludes manuscript files, response documents,
-project-memory files, local experiment logs, Git history, and author-specific
-paths. Initialize a fresh Git repository from this directory before publishing
-it through the anonymous review account.
