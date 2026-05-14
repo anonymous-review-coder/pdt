@@ -13,3 +13,6 @@ result_long_term_forecast.txt
 *.pt
 *.ckpt
 runs/
+scripts/create_k_top_sweep_manifests.py
+scripts/sweeps
+experiments/stage1/pdt/k_top_sweep
