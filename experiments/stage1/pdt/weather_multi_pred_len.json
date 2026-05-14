@@ -59,7 +59,7 @@
     ],
     "rk_mat_file": [
       "dataset/RRR_mats/weather/weather_RRR_L96_R8_H96_R.npy",
-      "dataset/RRR_mats/weather/weather_RRR_L96_R96_H192_R.npy",
+      "dataset/RRR_mats/weather/weather_RRR_L96_R64_H192_R.npy",
       "dataset/RRR_mats/weather/weather_RRR_L96_R64_H336_R.npy",
       "dataset/RRR_mats/weather/weather_RRR_L96_R8_H720_R.npy"
     ],
@@ -71,7 +71,7 @@
     ],
     "k_top": [
       8,
-      96,
+      64,
       64,
       8
     ],

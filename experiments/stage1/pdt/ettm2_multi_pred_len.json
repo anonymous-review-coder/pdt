@@ -61,7 +61,7 @@
       "dataset/RRR_mats/ETTm2/ETTm2_RRR_L96_R8_H96_R.npy",
       "dataset/RRR_mats/ETTm2/ETTm2_RRR_L96_R32_H192_R.npy",
       "dataset/RRR_mats/ETTm2/ETTm2_RRR_L96_R16_H336_R.npy",
-      "dataset/RRR_mats/ETTm2/ETTm2_RRR_L96_R96_H720_R.npy"
+      "dataset/RRR_mats/ETTm2/ETTm2_RRR_L96_R64_H720_R.npy"
     ],
     "r_rank": [
       96,
@@ -73,7 +73,7 @@
       8,
       32,
       16,
-      96
+      64
     ],
     "embed_size": 16,
     "dropout": [

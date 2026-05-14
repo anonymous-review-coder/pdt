@@ -58,7 +58,7 @@
       "dataset/RRR_mats/ETTm1/ETTm1_RRR_L96_R96_H720_R.npy"
     ],
     "rk_mat_file": [
-      "dataset/RRR_mats/ETTm1/ETTm1_RRR_L96_R96_H96_R.npy",
+      "dataset/RRR_mats/ETTm1/ETTm1_RRR_L96_R64_H96_R.npy",
       "dataset/RRR_mats/ETTm1/ETTm1_RRR_L96_R8_H192_R.npy",
       "dataset/RRR_mats/ETTm1/ETTm1_RRR_L96_R32_H336_R.npy",
       "dataset/RRR_mats/ETTm1/ETTm1_RRR_L96_R32_H720_R.npy"
@@ -70,7 +70,7 @@
       96
     ],
     "k_top": [
-      96,
+      64,
       8,
       32,
       32

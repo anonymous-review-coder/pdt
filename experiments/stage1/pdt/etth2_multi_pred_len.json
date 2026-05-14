@@ -60,7 +60,7 @@
     "rk_mat_file": [
       "dataset/RRR_mats/ETTh2/ETTh2_RRR_L96_R64_H96_R.npy",
       "dataset/RRR_mats/ETTh2/ETTh2_RRR_L96_R8_H192_R.npy",
-      "dataset/RRR_mats/ETTh2/ETTh2_RRR_L96_R96_H336_R.npy",
+      "dataset/RRR_mats/ETTh2/ETTh2_RRR_L96_R64_H336_R.npy",
       "dataset/RRR_mats/ETTh2/ETTh2_RRR_L96_R64_H720_R.npy"
     ],
     "r_rank": [
@@ -72,7 +72,7 @@
     "k_top": [
       64,
       8,
-      96,
+      64,
       64
     ],
     "embed_size": 16,
